@@ -39,21 +39,42 @@ namespace WSRestApiApp
                 String jobGuid = WSRestApiUtil.NewGuid();
                 String instanceGuid = WSRestApiUtil.NewGuid();
 
-                JObject jsObj = new JObject();
-                jsObj["SessionType"] = "TEditJobHeaderSession";
-                jsObj["jobGUID"] = jobGuid;
-                jsObj["InstanceGUID"] = instanceGuid;
+                JObject reqObj = new JObject();
+                reqObj["SessionType"] = "TEditJobHeaderSession";
+                reqObj["jobGUID"] = jobGuid;
+                reqObj["InstanceGUID"] = instanceGuid;
 
 
-                String ser = JsonConvert.SerializeObject(jsObj, Formatting.Indented);
+                String ser = JsonConvert.SerializeObject(reqObj, Formatting.Indented);
                 sb.AppendLine(ser);
 
                 ser = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, ser);
 
-                jsObj = JsonConvert.DeserializeObject<JObject>(ser);
-
+                JObject resObj = JsonConvert.DeserializeObject<JObject>(ser);
                 //Format the json to be "pretty"
-                sb.AppendLine(JsonConvert.SerializeObject(jsObj, Formatting.Indented));
+                sb.AppendLine(JsonConvert.SerializeObject(resObj, Formatting.Indented));
+
+                //Lookup the session id.
+                String sessionID = resObj.GetValue("SessionID", StringComparison.OrdinalIgnoreCase)?.Value<string>();
+
+                reqObj = new JObject();
+                reqObj["SessionID"] = sessionID;
+                reqObj["CustomGroupType"] = "JOB";
+                reqObj["RecalculateFieldProperties"] = true;
+                reqObj["RecalculateTabVisibility"] = true;
+                reqObj["OnChangeFieldName"] = sessionID;
+                JObject jobData = new JObject();
+                reqObj["JobData"] = jobData;
+
+                jobData["JobGuid"] = jobGuid;
+                jobData["WO"] = "Test: "+DateTime.Now.ToString();
+                jobData["JobTitle"] = "Job Title";
+                jobData["JobType"] = "Electrical";
+                jobData["JobStatus"] = "A";
+
+                ser = JsonConvert.SerializeObject(reqObj, Formatting.Indented);
+                sb.AppendLine(ser);
+
 
             }
             catch (Exception exp)
