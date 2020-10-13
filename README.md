@@ -9,7 +9,8 @@ More to come...
 Compiled in Visual Studio 2019 16.7.5 with Dot Net Core 3.1
 
 
-#ToDo
+# ToDo
+
 - [ ] Handle errors (Example: Authentication failure) with more grace
 - [ ] Update unit example
 - [ ] JSON is not case sensitive in WorkStudio
