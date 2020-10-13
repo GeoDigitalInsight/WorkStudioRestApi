@@ -2,7 +2,6 @@
 
 This repository contains WorkStudio json examples of using the REST based calls to perform actions on WorkStudio.
 
-More to come...
 
 # Compilation
 
