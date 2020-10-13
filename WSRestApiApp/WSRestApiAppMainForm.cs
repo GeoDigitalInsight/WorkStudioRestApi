@@ -56,12 +56,12 @@ namespace WSRestApiApp
             String ser = JsonConvert.SerializeObject(jsObj, Formatting.Indented);
             sb.AppendLine(ser);
 
-            ser = HttpUtil.Http(url.ToString(), "", "", ser);
+            ser = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, ser);
 
-            sb.AppendLine(ser);
+            jsObj = JsonConvert.DeserializeObject<JObject>(ser);
 
-
-
+            //Format the json to be "pretty"
+            sb.AppendLine(JsonConvert.SerializeObject(jsObj, Formatting.Indented));
 
             textBox1.Text = sb.ToString();
         }
@@ -72,6 +72,8 @@ namespace WSRestApiApp
             {
                 Pref p = JsonConvert.DeserializeObject<Pref>(File.ReadAllText(PrefPath));
                 tbWSServer.Text = p.WSServer;
+                tbUserName.Text = p.UserName;
+                tbPassword.Text = p.Password;
             }
         }
 
@@ -79,6 +81,8 @@ namespace WSRestApiApp
         {
             Pref p = new Pref();
             p.WSServer = tbWSServer.Text;
+            p.UserName = tbUserName.Text;
+            p.Password = tbPassword.Text;
             File.WriteAllText(PrefPath, JsonConvert.SerializeObject(p, Formatting.Indented));
         }
     }
@@ -86,6 +90,8 @@ namespace WSRestApiApp
     public class Pref
     {
         public String WSServer { get; set; } = "";
+        public String UserName { get; set; } = "";
+        public String Password { get; set; } = "";
     }
 
     public class HttpUtil
