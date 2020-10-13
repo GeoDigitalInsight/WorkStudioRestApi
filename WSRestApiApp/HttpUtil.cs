@@ -51,10 +51,16 @@ namespace WSRestApiApp
                 loWebResponse.Close();
                 return ASCIIEncoding.ASCII.GetString(memSt.ToArray());
             }
-            catch (Exception exp)
+            catch (WebException exp)
             {
-                return exp.Message;
+                throw new Exception(String.Format("Error processing request: {0}, Response: {1}", exp.Message, GetResponseContent(exp.Response)));
             }
+        }
+
+        public static string GetResponseContent(WebResponse resp)
+        {
+            if (resp == null) return "";
+            using (StreamReader reader = new StreamReader(resp.GetResponseStream())) return reader.ReadToEnd();
         }
     }
 }

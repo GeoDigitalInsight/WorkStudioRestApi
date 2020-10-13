@@ -28,31 +28,38 @@ namespace WSRestApiApp
         private void btPerformTest_Click(object sender, EventArgs e)
         {
             StringBuilder sb = new StringBuilder();
-            UriBuilder url = new UriBuilder(tbWSServer.Text);
-            url.Path = "DDOProtocol/CREATEEDITSESSION";
-            sb.AppendLine(url.Host);
-            sb.AppendLine(url.ToString());
+            try
+            {
+                UriBuilder url = new UriBuilder(tbWSServer.Text);
+                url.Path = "DDOProtocol/CREATEEDITSESSION";
+                sb.AppendLine(url.Host);
+                sb.AppendLine(url.ToString());
 
-            //Use Api Util to generate the proper guid
-            String jobGuid = WSRestApiUtil.NewGuid();
-            String instanceGuid = WSRestApiUtil.NewGuid(); 
+                //Use Api Util to generate the proper guid
+                String jobGuid = WSRestApiUtil.NewGuid();
+                String instanceGuid = WSRestApiUtil.NewGuid();
 
-            JObject jsObj = new JObject();
-            jsObj["SessionType"] = "TEditJobHeaderSession";
-            jsObj["jobGUID"] = jobGuid;
-            jsObj["InstanceGUID"] = instanceGuid;
+                JObject jsObj = new JObject();
+                jsObj["SessionType"] = "TEditJobHeaderSession";
+                jsObj["jobGUID"] = jobGuid;
+                jsObj["InstanceGUID"] = instanceGuid;
 
 
-            String ser = JsonConvert.SerializeObject(jsObj, Formatting.Indented);
-            sb.AppendLine(ser);
+                String ser = JsonConvert.SerializeObject(jsObj, Formatting.Indented);
+                sb.AppendLine(ser);
 
-            ser = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, ser);
+                ser = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, ser);
 
-            jsObj = JsonConvert.DeserializeObject<JObject>(ser);
+                jsObj = JsonConvert.DeserializeObject<JObject>(ser);
 
-            //Format the json to be "pretty"
-            sb.AppendLine(JsonConvert.SerializeObject(jsObj, Formatting.Indented));
+                //Format the json to be "pretty"
+                sb.AppendLine(JsonConvert.SerializeObject(jsObj, Formatting.Indented));
 
+            }
+            catch (Exception exp)
+            {
+                sb.Append(exp.Message);
+            }
             textBox1.Text = sb.ToString();
         }
 
