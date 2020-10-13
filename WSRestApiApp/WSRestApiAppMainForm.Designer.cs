@@ -85,6 +85,8 @@
             this.Controls.Add(this.btPerformTest);
             this.Name = "WSRestApiAppMainForm";
             this.Text = "Form1";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.WSRestApiAppMainForm_FormClosed);
+            this.Load += new System.EventHandler(this.WSRestApiAppMainForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
