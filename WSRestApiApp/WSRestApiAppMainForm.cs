@@ -17,5 +17,17 @@ namespace WSRestApiApp
             InitializeComponent();
         }
 
+        private void btPerformTest_Click(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            UriBuilder url = new UriBuilder(tbWSServer.Text);
+            url.Path = "DDOProtocol/CREATEEDITSESSION";
+            sb.AppendLine(url.Host);
+            sb.AppendLine(url.ToString());
+
+
+
+            textBox1.Text = sb.ToString();
+        }
     }
 }
