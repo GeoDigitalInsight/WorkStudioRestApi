@@ -35,7 +35,7 @@ namespace WSRestApiApp
                 sb.AppendLine(url.Host);
                 sb.AppendLine(url.ToString());
 
-                //Use Api Util to generate the proper guid
+                //Use Api Util to generate the proper guid format
                 String jobGuid = WSRestApiUtil.NewGuid();
                 String instanceGuid = WSRestApiUtil.NewGuid();
 
@@ -54,7 +54,7 @@ namespace WSRestApiApp
                 //Format the json to be "pretty"
                 sb.AppendLine(JsonConvert.SerializeObject(resObj, Formatting.Indented));
 
-                //Lookup the session id.
+                //Lookup the session id.  We cannot rely on case.
                 String sessionID = resObj.GetValue("SessionID", StringComparison.OrdinalIgnoreCase)?.Value<string>();
 
                 reqObj = new JObject();
@@ -74,6 +74,37 @@ namespace WSRestApiApp
 
                 ser = JsonConvert.SerializeObject(reqObj, Formatting.Indented);
                 sb.AppendLine(ser);
+                url.Path = "DDOProtocol/EDITSESSIONJOBVISUALFIELDUPDATE";
+                ser = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, ser);
+                resObj = JsonConvert.DeserializeObject<JObject>(ser);
+                //Format the json to be "pretty"
+                sb.AppendLine(JsonConvert.SerializeObject(resObj, Formatting.Indented));
+
+
+
+
+                reqObj = new JObject();
+                reqObj["SessionID"] = sessionID;
+
+                ser = JsonConvert.SerializeObject(reqObj, Formatting.Indented);
+                sb.AppendLine(ser);
+                url.Path = "DDOProtocol/SAVEEDITSESSIONJOB";
+                ser = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, ser);
+                resObj = JsonConvert.DeserializeObject<JObject>(ser);
+                //Format the json to be "pretty"
+                sb.AppendLine(JsonConvert.SerializeObject(resObj, Formatting.Indented));
+
+
+                reqObj = new JObject();
+                reqObj["SessionID"] = sessionID;
+
+                ser = JsonConvert.SerializeObject(reqObj, Formatting.Indented);
+                sb.AppendLine(ser);
+                url.Path = "DDOProtocol/CLOSEEDITSESSION";
+                ser = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, ser);
+                resObj = JsonConvert.DeserializeObject<JObject>(ser);
+                //Format the json to be "pretty"
+                sb.AppendLine(JsonConvert.SerializeObject(resObj, Formatting.Indented));
 
 
             }
