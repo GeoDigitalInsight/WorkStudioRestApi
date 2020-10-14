@@ -1,6 +1,6 @@
 # WorkStudio Rest API C# Examples
 
-This repository contains WorkStudio C# examples of using the REST based calls to perform actions on WorkStudio.
+This repository contains WorkStudio C# examples using the REST based calls to perform actions on WorkStudio.
 
 
 # Compilation
