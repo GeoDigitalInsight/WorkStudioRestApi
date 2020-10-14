@@ -53,6 +53,30 @@ namespace WSRestApiApp
 
         private void UpdateUnit(UriBuilder url, String userName, String passWord)
         {
+            JObject resObj;
+            JObject reqObj;
+
+
+
+            url.Path = "DDOProtocol/GETUNITLIST";
+            reqObj = new JObject();
+            resObj = HttpUtil.Http(url.ToString(), userName, passWord, reqObj, AddLine);
+
+            JArray jsObj = WSRestApiUtil.GetJSONValue<JArray>(resObj, "UnitList");
+
+            foreach (JToken jt in jsObj)
+            {
+                JObject en = jt as JObject;
+                String unitName = WSRestApiUtil.GetJSONValue<String>(en, "Unit");
+                AddLine(unitName);
+
+                //If we found the unit then populate a new reqObj with the unit
+                if (unitName == "WL2")
+                {
+                    AddLine("Found it");
+                    break;
+                }
+            }
 
         }
 
