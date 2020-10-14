@@ -10,6 +10,31 @@ namespace WSRestApiApp
 {
     public partial class WSRestApiAppMainForm : Form
     {
+        delegate void ThreadProcType();
+        delegate void ThreadProcCaller(ThreadProcType AProc);
+        private void ThreadProc(ThreadProcType AProc)
+        {
+            if (InvokeRequired)
+            {
+                ThreadProcCaller d = new ThreadProcCaller(ThreadProc);
+                Invoke(d, new object[] { AProc });
+            }
+            else
+            {
+                AProc();
+            }
+
+        }
+
+        public void AddLine(String msg)
+        {
+            ThreadProc(
+                delegate ()
+                {
+                    textBox1.AppendText(msg + Environment.NewLine);
+                });
+        }
+
         public WSRestApiAppMainForm()
         {
             InitializeComponent();
@@ -25,7 +50,7 @@ namespace WSRestApiApp
             }
         }
 
-        private void btPerformTest_Click(object sender, EventArgs e)
+        private void btUpdateJob_Click(object sender, EventArgs e)
         {
             StringBuilder sb = new StringBuilder();
             try
@@ -48,7 +73,7 @@ namespace WSRestApiApp
                 String ser = JsonConvert.SerializeObject(reqObj, Formatting.Indented);
                 sb.AppendLine(ser);
 
-                ser = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, ser);
+                ser = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, ser, AddLine);
 
                 JObject resObj = JsonConvert.DeserializeObject<JObject>(ser);
                 //Format the json to be "pretty"
@@ -75,7 +100,7 @@ namespace WSRestApiApp
                 ser = JsonConvert.SerializeObject(reqObj, Formatting.Indented);
                 sb.AppendLine(ser);
                 url.Path = "DDOProtocol/EDITSESSIONJOBVISUALFIELDUPDATE";
-                ser = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, ser);
+                ser = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, ser, AddLine);
                 resObj = JsonConvert.DeserializeObject<JObject>(ser);
                 //Format the json to be "pretty"
                 sb.AppendLine(JsonConvert.SerializeObject(resObj, Formatting.Indented));
@@ -89,7 +114,7 @@ namespace WSRestApiApp
                 ser = JsonConvert.SerializeObject(reqObj, Formatting.Indented);
                 sb.AppendLine(ser);
                 url.Path = "DDOProtocol/SAVEEDITSESSIONJOB";
-                ser = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, ser);
+                ser = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, ser, AddLine);
                 resObj = JsonConvert.DeserializeObject<JObject>(ser);
                 //Format the json to be "pretty"
                 sb.AppendLine(JsonConvert.SerializeObject(resObj, Formatting.Indented));
@@ -101,7 +126,7 @@ namespace WSRestApiApp
                 ser = JsonConvert.SerializeObject(reqObj, Formatting.Indented);
                 sb.AppendLine(ser);
                 url.Path = "DDOProtocol/CLOSEEDITSESSION";
-                ser = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, ser);
+                ser = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, ser, AddLine);
                 resObj = JsonConvert.DeserializeObject<JObject>(ser);
                 //Format the json to be "pretty"
                 sb.AppendLine(JsonConvert.SerializeObject(resObj, Formatting.Indented));
@@ -133,6 +158,11 @@ namespace WSRestApiApp
             p.UserName = tbUserName.Text;
             p.Password = tbPassword.Text;
             File.WriteAllText(PrefPath, JsonConvert.SerializeObject(p, Formatting.Indented));
+        }
+
+        private void btUpdateUnit_Click(object sender, EventArgs e)
+        {
+
         }
     }
 

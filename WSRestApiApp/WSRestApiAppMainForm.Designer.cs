@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btPerformTest = new System.Windows.Forms.Button();
+            this.btUpdateJob_ = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tbWSServer = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -36,17 +36,18 @@
             this.tbUserName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.btUpdateUnit = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // btPerformTest
+            // btUpdateJob_
             // 
-            this.btPerformTest.Location = new System.Drawing.Point(41, 28);
-            this.btPerformTest.Name = "btPerformTest";
-            this.btPerformTest.Size = new System.Drawing.Size(157, 43);
-            this.btPerformTest.TabIndex = 0;
-            this.btPerformTest.Text = "Perform Test";
-            this.btPerformTest.UseVisualStyleBackColor = true;
-            this.btPerformTest.Click += new System.EventHandler(this.btPerformTest_Click);
+            this.btUpdateJob_.Location = new System.Drawing.Point(41, 12);
+            this.btUpdateJob_.Name = "btUpdateJob_";
+            this.btUpdateJob_.Size = new System.Drawing.Size(157, 43);
+            this.btUpdateJob_.TabIndex = 0;
+            this.btUpdateJob_.Text = "Update Job";
+            this.btUpdateJob_.UseVisualStyleBackColor = true;
+            this.btUpdateJob_.Click += new System.EventHandler(this.btUpdateJob_Click);
             // 
             // textBox1
             // 
@@ -111,11 +112,22 @@
             this.label3.TabIndex = 4;
             this.label3.Text = "Password:";
             // 
+            // btUpdateUnit
+            // 
+            this.btUpdateUnit.Location = new System.Drawing.Point(41, 69);
+            this.btUpdateUnit.Name = "btUpdateUnit";
+            this.btUpdateUnit.Size = new System.Drawing.Size(157, 42);
+            this.btUpdateUnit.TabIndex = 5;
+            this.btUpdateUnit.Text = "Update Unit";
+            this.btUpdateUnit.UseVisualStyleBackColor = true;
+            this.btUpdateUnit.Click += new System.EventHandler(this.btUpdateUnit_Click);
+            // 
             // WSRestApiAppMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btUpdateUnit);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.tbUserName);
@@ -123,7 +135,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.tbWSServer);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.btPerformTest);
+            this.Controls.Add(this.btUpdateJob_);
             this.Name = "WSRestApiAppMainForm";
             this.Text = "Form1";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.WSRestApiAppMainForm_FormClosed);
@@ -135,7 +147,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btPerformTest;
+        private System.Windows.Forms.Button btUpdateJob_;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox tbWSServer;
         private System.Windows.Forms.Label label1;
@@ -143,6 +155,7 @@
         private System.Windows.Forms.TextBox tbUserName;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button btUpdateUnit;
     }
 }
 

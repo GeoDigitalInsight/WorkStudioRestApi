@@ -1,4 +1,5 @@
 ﻿using GeoDigital.IO;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,10 +10,11 @@ using System.Text;
 
 namespace WSRestApiApp
 {
+    public delegate void AddMessageCallback(String msg);
     public class HttpUtil
     {
         //Will be a post if postPayload is not blank otherwise it will be a get
-        public static String Http(String sUrl, String sUsername, String sPassword, String postPayload)
+        public static String Http(String sUrl, String sUsername, String sPassword, String postPayload, AddMessageCallback AMessageCallback)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             try
