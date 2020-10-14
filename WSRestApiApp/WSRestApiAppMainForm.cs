@@ -78,7 +78,7 @@ namespace WSRestApiApp
                 //Lookup the edit session id. The session id will be used to interact with the 
                 //edit session and job.
                 //Note: WorkStudio does not always gaurantee that case of properties will be honored.
-                String sessionID = resObj.GetValue("SessionID", StringComparison.OrdinalIgnoreCase)?.Value<string>();
+                String sessionID = WSRestApiUtil.GetJSONValue<string>(resObj, "SessionID");
 
                 //Update the data contained inside of the job in memory on the server.  This call is used to update 
                 //each field that is updated it also will call all of the needed OnChange() scripts needing to be fired.  
@@ -86,6 +86,8 @@ namespace WSRestApiApp
                 reqObj = new JObject();
                 //Required field
                 reqObj["SessionID"] = sessionID;
+                //Required field
+                reqObj["InstanceGUID"] = instanceGuid;
                 //Required field: The type of data we are updating.
                 reqObj["CustomGroupType"] = "JOB";
                 //Required field: Used when there is a UI that controls how an end user interacts with the data in fields.
@@ -140,6 +142,8 @@ namespace WSRestApiApp
                 reqObj = new JObject();
                 //Required field
                 reqObj["SessionID"] = sessionID;
+                //Required field
+                reqObj["InstanceGUID"] = instanceGuid;
                 url.Path = "DDOProtocol/SAVEEDITSESSIONJOB";
                 resObj = HttpUtil.Http(url.ToString(), userName, passWord, reqObj, AddLine);
 
@@ -150,6 +154,8 @@ namespace WSRestApiApp
                 reqObj = new JObject();
                 //Required field
                 reqObj["SessionID"] = sessionID;
+                //Required field
+                reqObj["InstanceGUID"] = instanceGuid;
                 url.Path = "DDOProtocol/CLOSEEDITSESSION";
                 resObj = HttpUtil.Http(url.ToString(), userName, passWord, reqObj, AddLine);
             }
@@ -203,6 +209,11 @@ namespace WSRestApiApp
             p.UserName = tbUserName.Text;
             p.Password = tbPassword.Text;
             File.WriteAllText(PrefPath, JsonConvert.SerializeObject(p, Formatting.Indented));
+        }
+
+        private void UpdateUnit(UriBuilder url, String userName, String passWord)
+        {
+
         }
 
         private void btUpdateUnit_Click(object sender, EventArgs e)
