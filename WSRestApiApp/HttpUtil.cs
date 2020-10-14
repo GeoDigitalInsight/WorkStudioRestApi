@@ -20,6 +20,7 @@ namespace WSRestApiApp
             try
             {
                 //Build the web request that will act as a "web service client"
+                AMessageCallback(sUrl);
                 HttpWebRequest loHttp = (HttpWebRequest)WebRequest.Create(sUrl);
                 loHttp.Timeout = 5 * 60 * 1000;
                 loHttp.Credentials = new NetworkCredential(sUsername, sPassword);
@@ -29,6 +30,7 @@ namespace WSRestApiApp
                     // set request body
                     loHttp.ContentType = "application/json";
                     loHttp.Method = "POST";
+                    AMessageCallback(postPayload);
                     using (StreamWriter writer = new StreamWriter(loHttp.GetRequestStream())) writer.Write(postPayload);
                 }
                 else
@@ -51,7 +53,9 @@ namespace WSRestApiApp
 
                 //Send the response conent back to the caller
                 loWebResponse.Close();
-                return ASCIIEncoding.ASCII.GetString(memSt.ToArray());
+                String retVal = ASCIIEncoding.ASCII.GetString(memSt.ToArray());
+                AMessageCallback(retVal);
+                return retVal;
             }
             catch (WebException exp)
             {
