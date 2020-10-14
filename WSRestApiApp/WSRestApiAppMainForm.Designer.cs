@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btUpdateJob_ = new System.Windows.Forms.Button();
+            this.btUpdateJob = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tbWSServer = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -37,17 +37,18 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.btUpdateUnit = new System.Windows.Forms.Button();
+            this.btHalt = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // btUpdateJob_
+            // btUpdateJob
             // 
-            this.btUpdateJob_.Location = new System.Drawing.Point(41, 12);
-            this.btUpdateJob_.Name = "btUpdateJob_";
-            this.btUpdateJob_.Size = new System.Drawing.Size(157, 43);
-            this.btUpdateJob_.TabIndex = 0;
-            this.btUpdateJob_.Text = "Update Job";
-            this.btUpdateJob_.UseVisualStyleBackColor = true;
-            this.btUpdateJob_.Click += new System.EventHandler(this.btUpdateJob_Click);
+            this.btUpdateJob.Location = new System.Drawing.Point(41, 12);
+            this.btUpdateJob.Name = "btUpdateJob";
+            this.btUpdateJob.Size = new System.Drawing.Size(157, 43);
+            this.btUpdateJob.TabIndex = 0;
+            this.btUpdateJob.Text = "Update Job";
+            this.btUpdateJob.UseVisualStyleBackColor = true;
+            this.btUpdateJob.Click += new System.EventHandler(this.btUpdateJob_Click);
             // 
             // textBox1
             // 
@@ -122,11 +123,23 @@
             this.btUpdateUnit.UseVisualStyleBackColor = true;
             this.btUpdateUnit.Click += new System.EventHandler(this.btUpdateUnit_Click);
             // 
+            // btHalt
+            // 
+            this.btHalt.Enabled = false;
+            this.btHalt.Location = new System.Drawing.Point(218, 69);
+            this.btHalt.Name = "btHalt";
+            this.btHalt.Size = new System.Drawing.Size(157, 42);
+            this.btHalt.TabIndex = 5;
+            this.btHalt.Text = "Halt";
+            this.btHalt.UseVisualStyleBackColor = true;
+            this.btHalt.Click += new System.EventHandler(this.btUpdateUnit_Click);
+            // 
             // WSRestApiAppMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btHalt);
             this.Controls.Add(this.btUpdateUnit);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -135,7 +148,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.tbWSServer);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.btUpdateJob_);
+            this.Controls.Add(this.btUpdateJob);
             this.Name = "WSRestApiAppMainForm";
             this.Text = "Form1";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.WSRestApiAppMainForm_FormClosed);
@@ -147,7 +160,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btUpdateJob_;
+        private System.Windows.Forms.Button btUpdateJob;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox tbWSServer;
         private System.Windows.Forms.Label label1;
@@ -156,6 +169,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btUpdateUnit;
+        private System.Windows.Forms.Button btHalt;
     }
 }
 

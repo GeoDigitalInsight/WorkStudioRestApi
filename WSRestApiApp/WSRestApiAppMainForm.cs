@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace WSRestApiApp
@@ -50,11 +51,11 @@ namespace WSRestApiApp
             }
         }
 
-        private void btUpdateJob_Click(object sender, EventArgs e)
+        //Routine that gives a flow of how to update a job and deal with anomolies that can occur with the job
+        private void UpdateJob(UriBuilder url, String userName, String passWord)
         {
             try
             {
-                UriBuilder url = new UriBuilder(tbWSServer.Text);
                 url.Path = "DDOProtocol/CREATEEDITSESSION";
 
                 //Use Api Util to generate the proper guid format
@@ -69,7 +70,7 @@ namespace WSRestApiApp
 
 
 
-                resObj = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, reqObj, AddLine);
+                resObj = HttpUtil.Http(url.ToString(), userName, passWord, reqObj, AddLine);
 
 
                 //Lookup the session id.  We cannot rely on case.
@@ -85,14 +86,14 @@ namespace WSRestApiApp
                 reqObj["JobData"] = jobData;
 
                 jobData["JobGuid"] = jobGuid;
-                jobData["WO"] = "Test: "+DateTime.Now.ToString();
+                jobData["WO"] = "Test: " + DateTime.Now.ToString();
                 jobData["JobTitle"] = "Job Title";
                 jobData["JobType"] = "Electrical";
                 jobData["JobStatus"] = "A";
 
 
                 url.Path = "DDOProtocol/EDITSESSIONJOBVISUALFIELDUPDATE";
-                resObj = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, reqObj, AddLine);
+                resObj = HttpUtil.Http(url.ToString(), userName, passWord, reqObj, AddLine);
 
 
 
@@ -100,18 +101,44 @@ namespace WSRestApiApp
                 reqObj = new JObject();
                 reqObj["SessionID"] = sessionID;
                 url.Path = "DDOProtocol/SAVEEDITSESSIONJOB";
-                resObj = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, reqObj, AddLine);
+                resObj = HttpUtil.Http(url.ToString(), userName, passWord, reqObj, AddLine);
 
 
                 reqObj = new JObject();
                 reqObj["SessionID"] = sessionID;
                 url.Path = "DDOProtocol/CLOSEEDITSESSION";
-                resObj = HttpUtil.Http(url.ToString(), tbUserName.Text, tbPassword.Text, reqObj, AddLine);
+                resObj = HttpUtil.Http(url.ToString(), userName, passWord, reqObj, AddLine);
             }
             catch (Exception exp)
             {
                 AddLine(exp.Message);
             }
+        }
+        private void btUpdateJob_Click(object sender, EventArgs e)
+        {
+            String userName = tbUserName.Text; 
+            String password = tbPassword.Text;
+            UriBuilder url = new UriBuilder(tbWSServer.Text);
+            Thread thd = new Thread(new ThreadStart(
+                delegate
+                {
+                    UpdateJob(url, userName, password);
+
+                    ThreadProc(
+                        delegate ()
+                        {
+                            btUpdateJob.Enabled = true;
+                            btUpdateUnit.Enabled = true;
+                            btHalt.Enabled = false;
+                        });
+                }));
+
+            btUpdateJob.Enabled = false;
+            btUpdateUnit.Enabled = false;
+            btHalt.Enabled = true;
+            thd.Start();
+
+
         }
 
         private void WSRestApiAppMainForm_Load(object sender, EventArgs e)
