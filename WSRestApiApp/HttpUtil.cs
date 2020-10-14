@@ -1,5 +1,7 @@
 ﻿using GeoDigital.IO;
 using Microsoft.VisualBasic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +16,7 @@ namespace WSRestApiApp
     public class HttpUtil
     {
         //Will be a post if postPayload is not blank otherwise it will be a get
-        public static String Http(String sUrl, String sUsername, String sPassword, String postPayload, AddMessageCallback AMessageCallback)
+        public static JObject Http(String sUrl, String sUsername, String sPassword, JObject postObj, AddMessageCallback AMessageCallback)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             try
@@ -25,9 +27,10 @@ namespace WSRestApiApp
                 loHttp.Timeout = 5 * 60 * 1000;
                 loHttp.Credentials = new NetworkCredential(sUsername, sPassword);
 
-                if (postPayload != "")
+                if (postObj != null)
                 {
                     // set request body
+                    String postPayload = JsonConvert.SerializeObject(postObj, Formatting.Indented);
                     loHttp.ContentType = "application/json";
                     loHttp.Method = "POST";
                     AMessageCallback(postPayload);
@@ -53,8 +56,9 @@ namespace WSRestApiApp
 
                 //Send the response conent back to the caller
                 loWebResponse.Close();
-                String retVal = ASCIIEncoding.ASCII.GetString(memSt.ToArray());
-                AMessageCallback(retVal);
+                JObject retVal = JsonConvert.DeserializeObject<JObject>(ASCIIEncoding.ASCII.GetString(memSt.ToArray()));
+                //Format the json to be "pretty"
+                AMessageCallback(JsonConvert.SerializeObject(retVal, Formatting.Indented));
                 return retVal;
             }
             catch (WebException exp)
