@@ -48,7 +48,7 @@
             this.btUpdateJob.TabIndex = 0;
             this.btUpdateJob.Text = "Update Job";
             this.btUpdateJob.UseVisualStyleBackColor = true;
-            this.btUpdateJob.Click += new System.EventHandler(this.btUpdateJob_Click);
+            this.btUpdateJob.Click += new System.EventHandler(this.Execute);
             // 
             // textBox1
             // 
@@ -121,7 +121,7 @@
             this.btUpdateUnit.TabIndex = 5;
             this.btUpdateUnit.Text = "Update Unit";
             this.btUpdateUnit.UseVisualStyleBackColor = true;
-            this.btUpdateUnit.Click += new System.EventHandler(this.btUpdateUnit_Click);
+            this.btUpdateUnit.Click += new System.EventHandler(this.Execute);
             // 
             // btHalt
             // 
@@ -132,7 +132,6 @@
             this.btHalt.TabIndex = 5;
             this.btHalt.Text = "Halt";
             this.btHalt.UseVisualStyleBackColor = true;
-            this.btHalt.Click += new System.EventHandler(this.btUpdateUnit_Click);
             // 
             // WSRestApiAppMainForm
             // 
