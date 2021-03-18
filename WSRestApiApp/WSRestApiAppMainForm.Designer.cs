@@ -38,13 +38,14 @@
             this.label3 = new System.Windows.Forms.Label();
             this.btUpdateUnit = new System.Windows.Forms.Button();
             this.btHalt = new System.Windows.Forms.Button();
+            this.btExecuteUIAction = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btUpdateJob
             // 
             this.btUpdateJob.Location = new System.Drawing.Point(41, 12);
             this.btUpdateJob.Name = "btUpdateJob";
-            this.btUpdateJob.Size = new System.Drawing.Size(157, 43);
+            this.btUpdateJob.Size = new System.Drawing.Size(157, 27);
             this.btUpdateJob.TabIndex = 0;
             this.btUpdateJob.Text = "Update Job";
             this.btUpdateJob.UseVisualStyleBackColor = true;
@@ -115,9 +116,9 @@
             // 
             // btUpdateUnit
             // 
-            this.btUpdateUnit.Location = new System.Drawing.Point(41, 69);
+            this.btUpdateUnit.Location = new System.Drawing.Point(41, 45);
             this.btUpdateUnit.Name = "btUpdateUnit";
-            this.btUpdateUnit.Size = new System.Drawing.Size(157, 42);
+            this.btUpdateUnit.Size = new System.Drawing.Size(157, 27);
             this.btUpdateUnit.TabIndex = 5;
             this.btUpdateUnit.Text = "Update Unit";
             this.btUpdateUnit.UseVisualStyleBackColor = true;
@@ -133,11 +134,22 @@
             this.btHalt.Text = "Halt";
             this.btHalt.UseVisualStyleBackColor = true;
             // 
+            // btExecuteUIAction
+            // 
+            this.btExecuteUIAction.Location = new System.Drawing.Point(41, 79);
+            this.btExecuteUIAction.Name = "btExecuteUIAction";
+            this.btExecuteUIAction.Size = new System.Drawing.Size(157, 32);
+            this.btExecuteUIAction.TabIndex = 6;
+            this.btExecuteUIAction.Text = "Execute UIAction";
+            this.btExecuteUIAction.UseVisualStyleBackColor = true;
+            this.btExecuteUIAction.Click += new System.EventHandler(this.Execute);
+            // 
             // WSRestApiAppMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btExecuteUIAction);
             this.Controls.Add(this.btHalt);
             this.Controls.Add(this.btUpdateUnit);
             this.Controls.Add(this.label3);
@@ -169,6 +181,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btUpdateUnit;
         private System.Windows.Forms.Button btHalt;
+        private System.Windows.Forms.Button btExecuteUIAction;
     }
 }
 

@@ -187,6 +187,14 @@ namespace WSRestApiApp
             resObj = HttpUtil.Http(url.ToString(), userName, passWord, reqObj, AddLine);
         }
 
+        //Routine that gives a flow of how to update a job and deal with anomolies that can occur with the job
+        private void ExecuteUIAction(UriBuilder url, String userName, String passWord)
+        {
+            url.Path = "DDOProtocol/EXECUTEUIACTION";
+            JObject reqObj = JsonConvert.DeserializeObject<JObject>(Resources.EXECUTEUIACTION);
+            HttpUtil.Http(url.ToString(), userName, passWord, reqObj, AddLine);
+        }
+
         private void Execute(object sender, EventArgs e)
         {
             String userName = tbUserName.Text;
@@ -199,6 +207,7 @@ namespace WSRestApiApp
                     {
                         if (sender == btUpdateJob) UpdateJob(url, userName, password);
                         if (sender == btUpdateUnit) UpdateUnit(url, userName, password);
+                        if (sender == btExecuteUIAction) ExecuteUIAction(url, userName, password);
                     }
                     catch (Exception exp)
                     {
@@ -210,12 +219,14 @@ namespace WSRestApiApp
                         {
                             btUpdateJob.Enabled = true;
                             btUpdateUnit.Enabled = true;
+                            btExecuteUIAction.Enabled = true;
                             btHalt.Enabled = false;
                         });
                 }));
 
             btUpdateJob.Enabled = false;
             btUpdateUnit.Enabled = false;
+            btExecuteUIAction.Enabled = false;
             btHalt.Enabled = true;
             thd.Start();
         }
@@ -239,8 +250,6 @@ namespace WSRestApiApp
             p.Password = tbPassword.Text;
             File.WriteAllText(PrefPath, JsonConvert.SerializeObject(p, Formatting.Indented));
         }
-
-
     }
 
     public class Pref
