@@ -210,7 +210,17 @@ namespace WSRestApiApp
         {
             url.Path = "DDOProtocol/EXECUTEUIACTION";
             JObject reqObj = JsonConvert.DeserializeObject<JObject>(Resources.EXECUTEUIACTION);
-            HttpUtil.Http(url.ToString(), userName, passWord, reqObj, AddLine);
+            JObject resObj = HttpUtil.Http(url.ToString(), userName, passWord, reqObj, AddLine);
+
+            if (String.Equals(WSRestApiUtil.GetJSONValue<String>(resObj, "Protocol"), "OK", StringComparison.CurrentCultureIgnoreCase))
+            {
+                //Todo: Show how to get a value back that was modified by the command on the server 
+
+            }
+            else
+            {
+                //An error occurred
+            }
         }
 
         private void Execute(object sender, EventArgs e)
