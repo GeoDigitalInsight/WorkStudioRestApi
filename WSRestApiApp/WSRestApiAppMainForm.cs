@@ -187,7 +187,25 @@ namespace WSRestApiApp
             resObj = HttpUtil.Http(url.ToString(), userName, passWord, reqObj, AddLine);
         }
 
-        //Routine that gives a flow of how to update a job and deal with anomolies that can occur with the job
+        //Routine that gives a flow of how to execute a custom UI Action in WorkStudio
+        //In this example, a command named PickListSavePicklistInfo with a TDataObj in/out
+        //parameter named Data needs to be setup in WorkStudio
+        //A UIAction named PickListSavePicklistInfo needs to be attached to the command
+        //mentioned above.
+        //The following is an example of the script that can be used to the command
+        //to access the payload being sent up via the EXECUTEUIACTION: 
+        //function OnExecute: String;
+        //var
+        //  lData: TDataObj;
+        //  lTable: TDDOTable;
+        //  lFieldCount: Integer;
+        //begin
+        //  Result:='';
+        //  lData:=ScriptObjects.FindObjectByName('Data');
+        //  lData.WriteToFile('c:\debug\mytest.ddo');
+        //  //Standard TDataObj manipulation can be performed here.
+        //  lFieldCount:=lData.AsFrame.NewSlot('PickList').AsFrame.NewSlost('Heading').AsArray.Count;
+        //end;
         private void ExecuteUIAction(UriBuilder url, String userName, String passWord)
         {
             url.Path = "DDOProtocol/EXECUTEUIACTION";
