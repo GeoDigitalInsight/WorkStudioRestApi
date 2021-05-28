@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -277,6 +278,167 @@ namespace WSRestApiApp
             p.UserName = tbUserName.Text;
             p.Password = tbPassword.Text;
             File.WriteAllText(PrefPath, JsonConvert.SerializeObject(p, Formatting.Indented));
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            StringWriter sw = new StringWriter(sb);
+
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                writer.Formatting = Formatting.Indented;
+
+                writer.WriteStartObject();
+                writer.WritePropertyName("GeoDigitalBin");
+                writer.WriteRawValue("\"\\/Base64(VGhpcyBpcyBhIHRlc3Q=)\\/\"");
+                writer.WritePropertyName("PSU");
+                writer.WriteValue("500W");
+                writer.WritePropertyName("Drives");
+                writer.WriteStartArray();
+                writer.WriteValue("DVD read/writer");
+                writer.WriteComment("(broken)");
+                writer.WriteValue("500 gigabyte hard drive");
+                writer.WriteValue(42);
+                writer.WriteEnd();
+                writer.WriteEndObject();
+            }
+            AddLine(sb.ToString());
+
+
+            JObject reqObj = new JObject();
+            //Required field
+            reqObj["GeoDigitalBin"] = @"\/Base64(VGhpcyBpcyBhIHRlc3Q=)\/";
+            reqObj["NewtonSoftBin"] = Encoding.UTF8.GetBytes("This is a test");
+            JsonSerializerSettings jss = new JsonSerializerSettings();
+            jss.Converters.Add(new GeoDigitalJsonConverter());
+            jss.Formatting = Formatting.Indented;
+            String str = JsonConvert.SerializeObject(reqObj, jss);
+            //String str = JsonConvert.SerializeObject(reqObj);
+            AddLine(str);
+
+            //JObject reqObj2 = JsonConvert.DeserializeObject<JObject>(str, new GeoDigitalJsonConverter());
+            //str = JsonConvert.SerializeObject(reqObj2, new GeoDigitalJsonConverter());
+            //AddLine(str);
+
+            //AddLine("***Test**");
+            //String str = "{\"GeoDigitalBin\":\"\\/Base64(VGhpcyBpcyBhIHRlc3Q =)\\/\"}";
+            //AddLine(str);
+            //object reqObj3 = JsonConvert.DeserializeObject<JObject>(str,  new GeoDigitalJsonConverter());
+
+
+
+            //AddLine(Convert.ToString(reqObj3["GeoDigitalBin"])); 
+            //str = JsonConvert.SerializeObject(reqObj3);
+            //AddLine(str);
+        }
+    }
+
+    public class GeoDigitalJsonConverter : JsonConverter
+    {
+
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            JToken t = JToken.FromObject(value);
+            if (value.GetType() == typeof(byte[]))
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("\"\\/Base64(");
+
+                sb.Append(Convert.ToBase64String(value as byte[], Base64FormattingOptions.None));
+                sb.Append(")\\/\"");
+                writer.WriteRawValue(sb.ToString());
+            }
+             else if (t.Type == JTokenType.Object)
+            {
+                writer.WriteStartObject();
+                WriteJson(writer, value, serializer);
+                writer.WriteEndObject();
+            }
+            else
+            {
+                
+                //base.WriteJson(writer, value, serializer);
+                t.WriteTo(writer);
+                /*
+                JObject o = (JObject)t;
+                IList<string> propertyNames = o.Properties().Select(p => p.Name).ToList();
+
+                o.AddFirst(new JProperty("Keys", new JArray(propertyNames)));
+
+                o.WriteTo(writer);
+                */
+            }
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+
+            if (reader.TokenType == JsonToken.String)
+            {
+                reader.Read();
+                var values = new List<object>();
+                while (reader.TokenType != JsonToken.EndArray)
+                {
+                    values.Add(reader.Value);
+                    reader.Read();
+                }
+
+                reader.Read();
+                source = values.ToArray();
+            }
+
+
+            //object source;
+
+            ////[42, 23]
+            //if (reader.TokenType == JsonToken.StartArray)
+            //{
+            //    reader.Read();
+            //    var values = new List<object>();
+            //    while (reader.TokenType != JsonToken.EndArray)
+            //    {
+            //        values.Add(reader.Value);
+            //        reader.Read();
+            //    }
+
+            //    reader.Read();
+            //    source = values.ToArray();
+            //}
+            //else if (reader.TokenType == JsonToken.StartObject)//{"subtrahend": 23, "minuend": 42}
+            //{
+            //    reader.Read();
+            //    var values = new JObject();
+            //    while (reader.TokenType != JsonToken.EndObject)
+            //    {
+            //        if (reader.TokenType != JsonToken.PropertyName)
+            //            throw new FormatException("Expected a property name, got: " + reader.TokenType);
+            //        string propertyName = reader.Value.ToString();
+            //        reader.Read();
+
+            //        values[propertyName] = new JValue(reader.Value);
+            //        reader.Read();
+            //    }
+
+            //    source = values;
+            //}
+            //else
+            //    throw new FormatException("Expected start of object or start of array");
+
+            //reader.Read();
+            //return source;
+        }
+
+        public override bool CanRead
+        {
+            get { return true; }
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            //return (objectType == typeof(byte[])) || (objectType == typeof(JObject));
+            return (objectType == typeof(byte[]));
         }
     }
 

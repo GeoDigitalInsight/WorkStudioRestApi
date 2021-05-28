@@ -11,47 +11,40 @@
       "ParameterType": "ptInput",
       "ObjectClass": "TDataObj",
       "ParamValue": {
-        "JobGuid": "{623de598-3faf-4f07-b240-8ab198aab751}",
         "PickList": {
           "Heading": [
-            "ITEMGUID",
+            "ORACLEWO",
             "ITEMNO",
-            "DESCRIPTION",
             "SHIPPED",
             "SHIPPEDFROM",
             "DESIGNED",
             "SOURCE",
             "INSTALLED",
             "LEFTOVERMATERIAL",
-            "LANDINGSTOCK",
-            "TYPE"
+            "LANDINGSTOCK"
           ],
           "Data": [
             [
-              "{95abd294-198b-4241-81f3-22b4f724761d}",
+              "222",
               "110052800",
-              "XARM BRACE FLAT STEEL 28\" LONG",
               6,
               "FER FER ST",
               6,
               "FERFER",
               0,
               0,
-              "1234",
-              "PICKLIST"
+              "333"
             ],
             [
-              "{d9a3d706-4dfd-4946-9682-1d2920b8c426}",
+              "12346",
               "110052800",
-              "XARM BRACE FLAT STEEL 28\" LONG",
               6,
               "FER FER ST",
               6,
               "FERFER",
               0,
               0,
-              "1234",
-              "PICKLIST"
+              "444"
             ]
           ]
         }
