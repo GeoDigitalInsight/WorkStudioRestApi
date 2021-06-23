@@ -227,7 +227,7 @@ namespace WSRestApiApp
         {
             String userName = tbUserName.Text;
             String password = tbPassword.Text;
-            UriBuilder url = new UriBuilder(tbWSServer.Text);
+            UriBuilder url = new UriBuilder(tbUri.Text);
             Thread thd = new Thread(new ThreadStart(
                 delegate
                 {
@@ -264,20 +264,48 @@ namespace WSRestApiApp
             if (File.Exists(PrefPath))
             {
                 Pref p = JsonConvert.DeserializeObject<Pref>(File.ReadAllText(PrefPath));
-                tbWSServer.Text = p.WSServer;
+                tbUri.Text = p.WSServer;
                 tbUserName.Text = p.UserName;
                 tbPassword.Text = p.Password;
             }
+            WSUriTextChanged(null, null);
         }
 
         private void WSRestApiAppMainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             Pref p = new Pref();
-            p.WSServer = tbWSServer.Text;
+            p.WSServer = tbUri.Text;
             p.UserName = tbUserName.Text;
             p.Password = tbPassword.Text;
             File.WriteAllText(PrefPath, JsonConvert.SerializeObject(p, Formatting.Indented));
         }
+
+        private void SchemeHostPortTextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WSUriTextChanged(object sender, EventArgs e)
+        {
+            //Parse the uri and put the proper values int he scheme, host, port boxes
+            tbScheme.TextChanged -= SchemeHostPortTextChanged;
+            tbHost.TextChanged -= SchemeHostPortTextChanged;
+            tbPort.TextChanged -= SchemeHostPortTextChanged;
+            try
+            {
+                UriBuilder uri = new UriBuilder(tbUri.Text);
+                tbScheme.Text = uri.Scheme;
+                tbHost.Text = uri.Host;
+                tbPort.Text = Convert.ToString(uri.Port);
+            }
+            finally
+            {
+                tbScheme.TextChanged += SchemeHostPortTextChanged;
+                tbHost.TextChanged += SchemeHostPortTextChanged;
+                tbPort.TextChanged += SchemeHostPortTextChanged;
+            }
+        }
+
     }
 
     public class Pref
