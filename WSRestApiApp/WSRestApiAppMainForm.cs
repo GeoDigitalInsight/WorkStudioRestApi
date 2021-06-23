@@ -305,7 +305,7 @@ namespace WSRestApiApp
             }
             AddLine(sb.ToString());
 
-
+/*
             JObject reqObj = new JObject();
             //Required field
             reqObj["GeoDigitalBin"] = @"\/Base64(VGhpcyBpcyBhIHRlc3Q=)\/";
@@ -314,21 +314,19 @@ namespace WSRestApiApp
             jss.Converters.Add(new GeoDigitalJsonConverter());
             jss.Formatting = Formatting.Indented;
             String str = JsonConvert.SerializeObject(reqObj, jss);
-            //String str = JsonConvert.SerializeObject(reqObj);
             AddLine(str);
+*/
 
             //JObject reqObj2 = JsonConvert.DeserializeObject<JObject>(str, new GeoDigitalJsonConverter());
             //str = JsonConvert.SerializeObject(reqObj2, new GeoDigitalJsonConverter());
             //AddLine(str);
 
-            //AddLine("***Test**");
-            //String str = "{\"GeoDigitalBin\":\"\\/Base64(VGhpcyBpcyBhIHRlc3Q =)\\/\"}";
-            //AddLine(str);
-            //object reqObj3 = JsonConvert.DeserializeObject<JObject>(str,  new GeoDigitalJsonConverter());
-
-
-
-            //AddLine(Convert.ToString(reqObj3["GeoDigitalBin"])); 
+            AddLine("***Test**");
+            String str = "{\"GeoDigitalBin\":\"\\/Base64(VGhpcyBpcyBhIHRlc3Q =)\\/\"}";
+            AddLine(str);
+            JObject reqObj3 = JsonConvert.DeserializeObject<JObject>(str,  new GeoDigitalJsonConverter());
+            AddLine(Convert.ToString(reqObj3["GeoDigitalBin"])); 
+            
             //str = JsonConvert.SerializeObject(reqObj3);
             //AddLine(str);
         }
@@ -375,19 +373,14 @@ namespace WSRestApiApp
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
 
+
             if (reader.TokenType == JsonToken.String)
             {
-                reader.Read();
-                var values = new List<object>();
-                while (reader.TokenType != JsonToken.EndArray)
-                {
-                    values.Add(reader.Value);
-                    reader.Read();
-                }
-
-                reader.Read();
-                source = values.ToArray();
+                String? bla = reader.ReadAsString();
+                return bla;
             }
+            return null;
+
 
 
             //object source;
@@ -438,7 +431,8 @@ namespace WSRestApiApp
         public override bool CanConvert(Type objectType)
         {
             //return (objectType == typeof(byte[])) || (objectType == typeof(JObject));
-            return (objectType == typeof(byte[]));
+            //return (objectType == typeof(byte[]));
+            return (objectType == typeof(String));
         }
     }
 
