@@ -52,6 +52,7 @@ namespace WSRestApiApp
             }
         }
 
+        //See ..\README.md for more information
         private void UpdateUnit(UriBuilder url, String userName, String passWord)
         {
             JObject resObj;
@@ -81,7 +82,7 @@ namespace WSRestApiApp
 
         }
 
-        //Routine that gives a flow of how to update a job and deal with anomolies that can occur with the job
+        //See ..\README.md for more information
         private void UpdateJob(UriBuilder url, String userName, String passWord)
         {
             JObject resObj;
@@ -188,25 +189,7 @@ namespace WSRestApiApp
             resObj = HttpUtil.Http(url.ToString(), userName, passWord, reqObj, AddLine);
         }
 
-        //Routine that gives a flow of how to execute a custom UI Action in WorkStudio
-        //In this example, a command named TestUIAction with a TDataObj in/out
-        //parameter named Data needs to be setup in WorkStudio
-        //A UIAction named TestUIAction needs to be attached to the command
-        //mentioned above.
-        //The following is an example of the script that can be used to the command
-        //to access the payload being sent up via the EXECUTEUIACTION: 
-        //function OnExecute: String;
-        //var
-        //  lData: TDataObj;
-        //  lTable: TDDOTable;
-        //  lFieldCount: Integer;
-        //begin
-        //  Result:='';
-        //  lData:=ScriptObjects.FindObjectByName('Data');
-        //  lData.WriteToFile('c:\debug\mytest.ddo');
-        //  //Standard TDataObj manipulation can be performed here.
-        //  lFieldCount:=lData.AsFrame.NewSlot('PickList').AsFrame.NewSlost('Heading').AsArray.Count;
-        //end;
+        //See ..\README.md for more information
         private void ExecuteUIAction(UriBuilder url, String userName, String passWord)
         {
             url.Path = "DDOProtocol/EXECUTEUIACTION";
@@ -244,9 +227,7 @@ namespace WSRestApiApp
             //The paramvalue is the payload that is whatever is desired to be sent to the WorkStudio Action script to be manipulated.
             actParam["ParamValue"] = dataPayload;
 
-            dataPayload["attachguid"] = "{2664EA5B-D36C-4E47-AF4B-DF93C6EB87E9}";
-            dataPayload["filename"] = "TransformerSheet.pdf";
-            dataPayload["bloburi"] = "sftp://server.com/directory/{2664EA5B-D36C-4E47-AF4B-DF93C6EB87E9}";
+            dataPayload["filename"] = "GDI.png";
 
             //Demonstrate how we could get a binary payload (image, pdf, word document, etc.) to the WorkStudio server to be able to be 
             //manipulated from a script.  We have included GeoDigitalLog.png as a resource in the project to demonstrate this.  The same

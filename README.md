@@ -40,6 +40,94 @@ As you can see in the screen shot below `Default\WSApiUser` has been specified i
 
 ![](images/Credentials.png)
 
+# Examples
+
+Examples of how to execute a http request against WorkStudio Server is provided in `WSRestApiApp\WSRestApiAppMainForm.cs`.  The form has buttons that illustrates how to execute each example.
+
+Note: Be sure to be mindful of the utility methods that are used as somethings are important to pay attention to:
+* Case sensitivity of json properties:  WorkStudio does not gaurantee that the properties of the JSON object will always be of the same case.  ie.. JSON object property names must be treated as thought they are case insensitive.  Utily method WSRestApiUtil.GetJSONValue() was provided as an example of how tow work with that.
+* Guids: Guids that are represented as strings in WorkStudio must conform to uppercase type B guid (https://docs.microsoft.com/en-us/dotnet/api/system.guid.tostring?view=netcore-3.1).  There is another utility method WSRestApiUtil.NewGuid() that is provided to show how this works.
+
+
+### Updating or Creating a Job
+
+**Protocols used**: CREATEEDITSESSION, EDITSESSIONJOBVISUALFIELDUPDATE, SAVEEDITSESSIONJOB, CLOSEEDITSESSION
+
+**Description**: This method gives and example of how an attribute or custom data on a job can be updated.  A lot of times a CIS or some other systme might need to update some header data on a job.  One example might be an address of a customer might want to update a custom field that holds the address in the custom header data.
+
+**Method doing the work**: WSRestApiAppMainForm.UpdateJob()
+
+
+### Fetching the Unit List
+
+**Protocols used**: GETUNITLIST
+
+**Description**: This method will fetch all of the units that WorkStudio knows of.  NOTE: This method was intended to show how to update a unit as well but that is not yet completed yet.
+
+**Method doing the work**: WSRestApiAppMainForm.UpdateUnit()
+
+### Executing an Action Command
+
+**Protocols used**: EXECUTEUIACTION
+
+**Description**: WorkStudio has a very rich scipting API that gives WorkStudio scripters the ability to perform all sorts of custom workflow tweaks as well as performing other customization.  This example will show how a client can send some data to WorkStudio server to have it execute a custom script (known as a UIAction and ActionCommand) passing it some sort of payload for the script to be able to look at and then return something to the client to work with.
+
+**Method doing the work**: WSRestApiAppMainForm.ExecuteUIAction()
+
+**Setup**: In order for this to work, you will need to have both a Command and UIAction setup on WorkStudio Server.  Start out by setting up a new scripted command or use one that already exists.
+
+In this example, a command named TestUIAction needs to be setup.
+
+![](images/NewScriptedCommand.png)
+
+![](images/ScriptedCommandProperties.png)
+
+In TestUIAction parameters setup a TDataObj Input/Output parameter named Data.
+
+![](images/ScriptedCommandParameters.png)
+
+In the `Script` tab, you can put in the following sample script.  This script give a general idea of how to get at the binary ping image and some of the data that was sent from the client.  It also demonstrates how things can be communicated back down to the client.
+
+```Pascal
+function OnExecute: String;
+var
+  lData: TDataObj;
+  lMem: TMemoryStream;
+  lFileName: String;
+begin
+  Result:='';
+  lData:=ScriptObjects.FindObjectByName('Data');
+  //Standard TDataObj manipulation can be performed here.
+
+  //Give an example of how to write to file for debugging
+  //purposes
+  TFileUtils.WriteAllText('c:\debug\mytest.ddo', lData.PrintToJSONReadable);
+  lFileName:=lData.AsFrame.NewSlot('filename').AsString;
+
+  lMem:=TMemoryStream.Create;
+  try
+    TStrUtils.Base64ToStream(lData.AsFrame.NewSlot('LogoPngBase64').AsString, lMem);
+    lMem.Seek(0, 0);
+    lMem.SaveToFile('c:\debug\'+lFileName);
+  finally
+    lMem.Free;
+  end;
+  //We can modify the object and send information back to
+  //the client if we desire
+  lData.Clear;
+  lData.AsFrame.NewSlot('ResponseFromServer').AsString:=lFileName+' has been processed.';
+end;
+```
+
+![](images/ScriptedCommandScript.png)
+
+Right click on the TestUIAction command that was created and choose to create an `Action`.
+
+![](images/CreateAction.png)
+
+Be sure to give access to the user that will be executing the REST call that was setup in the documentation above.  In our example here, WSApiUser (which was setup above) is a member of the SCRAPI group which means that allowing access to SCRAPI will give access to WSApiUser to execute the UIAction.
+
+![](images/SetActionPermissions.png)
 
 # ToDo
 
