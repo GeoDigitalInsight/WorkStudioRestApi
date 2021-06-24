@@ -98,6 +98,7 @@ namespace WSRestApiApp
             reqObj = new JObject();
             //Required field
             reqObj["SessionType"] = "TEditJobHeaderSession";
+            //**UPDATE THIS FIELD**
             //Required field
             reqObj["jobGUID"] = jobGuid;
             //Required field
@@ -139,15 +140,19 @@ namespace WSRestApiApp
             //Required if this is a new job.
             //Optional if this is an existing job.  Existing value will be maintained if omitted.
             jobData["JobGuid"] = jobGuid;
+            //**UPDATE THIS FIELD**
             //Required if this is a new job.
             //Optional if this is an existing job.  Existing value will be maintained if omitted.
             jobData["WO"] = "Test: " + DateTime.Now.ToString();
+            //**UPDATE THIS FIELD**
             //Required if this is a new job.
             //Optional if this is an existing job.  Existing value will be maintained if omitted.
             jobData["JobTitle"] = "Job Title";
+            //**UPDATE THIS FIELD**
             //Required if this is a new job.
             //Optional if this is an existing job.  Existing value will be maintained if omitted.
             jobData["JobType"] = "Electrical";
+            //**UPDATE THIS FIELD**
             //Required if this is a new job.
             //NOT USED if this is an existing job.  Use the job transition protocols in order to change
             //job status on existing jobs.
@@ -159,6 +164,7 @@ namespace WSRestApiApp
             //in this API.
             JObject customData = new JObject();
             jobData["CustomData"] = customData;
+            //**UPDATE THIS FIELD**
             //Optional field.  The field that is desired to be updated.  Omitting any fields
             //will result in the field being maintained.
             customData["MyField"] = "hello world";
@@ -198,6 +204,7 @@ namespace WSRestApiApp
             JObject reqObj;
 
             reqObj = new JObject();
+            //**UPDATE THIS FIELD**
             //The name of the UIAction to execute.  See the ReadMe.md file to see better
             //definition around how to set this up.
             reqObj["UIActionName"] = "TestUIAction";
@@ -209,6 +216,7 @@ namespace WSRestApiApp
             actParams.Add(actParam);
             //Set to TObjectParameter
             actParam["_ClassName"] = "TObjectParameter";
+            //**UPDATE THIS FIELD**
             //The name of the object that shows up in the script.  See the ReadMe.md file to see better
             //definition around how to set this up.
             actParam["ParamName"] = "Data";
@@ -223,6 +231,8 @@ namespace WSRestApiApp
             //and would be recommended for integrations.
             actParam["ObjectClass"] = "TDataObj";
 
+            //**UPDATE THIS FIELD** (All data in dataPayload is meant to be modified by the author of this
+            //REST API)
             JObject dataPayload = new JObject();
             //The paramvalue is the payload that is whatever is desired to be sent to the WorkStudio Action script to be manipulated.
             actParam["ParamValue"] = dataPayload;
@@ -246,7 +256,20 @@ namespace WSRestApiApp
 
             if (String.Equals(WSRestApiUtil.GetJSONValue<String>(resObj, "Protocol"), "OK", StringComparison.CurrentCultureIgnoreCase))
             {
-                //Todo: Show how to get a value back that was modified by the command on the server 
+                //We will now find the value that was returned from the server
+                //First we need to search through the response parameters and find our parameter named "Data"
+                JArray resParams = WSRestApiUtil.GetJSONValue<JArray>(resObj, "Parameters");
+                foreach (JToken jt in resParams)
+                {
+                    JObject en = jt as JObject;
+                    String paramName = WSRestApiUtil.GetJSONValue<String>(en, "ParamName");
+                    if (!paramName.Equals("Data", StringComparison.CurrentCultureIgnoreCase)) continue;
+
+
+                    JObject dataPayload2 = WSRestApiUtil.GetJSONValue<JObject>(en, "ParamValue");
+                    AddLine($"The response from the server is: {WSRestApiUtil.GetJSONValue<String>(dataPayload2, "ResponseFromServer")}");
+                }
+
 
             }
             else

@@ -48,6 +48,8 @@ Note: Be sure to be mindful of the utility methods that are used as somethings a
 * Case sensitivity of json properties:  WorkStudio does not gaurantee that the properties of the JSON object will always be of the same case.  ie.. JSON object property names must be treated as thought they are case insensitive.  Utily method WSRestApiUtil.GetJSONValue() was provided as an example of how tow work with that.
 * Guids: Guids that are represented as strings in WorkStudio must conform to uppercase type B guid (https://docs.microsoft.com/en-us/dotnet/api/system.guid.tostring?view=netcore-3.1).  There is another utility method WSRestApiUtil.NewGuid() that is provided to show how this works.
 
+Look in the comments of the source code located in WSRestApiAppMainForm.cs to find more detailed information about what is being set where and why.  As a general rule, a comment marked `**UPDATE THIS FIELD**` is a field that can and should be updated by an author of an integration.  All other fields can most likely stay as they are as they are just needed for the REST call to operate properly.
+
 
 ### Updating or Creating a Job
 
@@ -115,7 +117,7 @@ begin
   //We can modify the object and send information back to
   //the client if we desire
   lData.Clear;
-  lData.AsFrame.NewSlot('ResponseFromServer').AsString:=lFileName+' has been processed.';
+  lData.AsFrame.NewSlot('ResponseFromServer').AsString:=lFileName+' has been processed at '+DateTimeToStr(TDateTimeCntx.InternalNow);
 end;
 ```
 
