@@ -61,29 +61,12 @@ namespace WSRestApiApp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {
-        ///  &quot;protocol&quot;: &quot;EXECUTEUIACTION&quot;,
-        ///  &quot;UIActionName&quot;: &quot;PickListSavePicklistInfo&quot;,
-        ///  &quot;Parameters&quot;: [
-        ///    {
-        ///      &quot;_ClassName&quot;: &quot;TObjectParameter&quot;,
-        ///      &quot;ParamName&quot;: &quot;Data&quot;,
-        ///      &quot;Description&quot;: &quot;&quot;,
-        ///      &quot;Required&quot;: false,
-        ///      &quot;UserParam&quot;: false,
-        ///      &quot;ParameterType&quot;: &quot;ptInput&quot;,
-        ///      &quot;ObjectClass&quot;: &quot;TDataObj&quot;,
-        ///      &quot;ParamValue&quot;: {
-        ///        &quot;JobGuid&quot;: &quot;{623de598-3faf-4f07-b240-8ab198aab751}&quot;,
-        ///        &quot;PickList&quot;: {
-        ///          &quot;Heading&quot;: [
-        ///            &quot;ITEMGUID&quot;,
-        ///            &quot;ITEMNO&quot;,
-        ///      [rest of string was truncated]&quot;;.
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static string EXECUTEUIACTION {
+        internal static System.Drawing.Bitmap GeoDigitalLogo {
             get {
-                return ResourceManager.GetString("EXECUTEUIACTION", resourceCulture);
+                object obj = ResourceManager.GetObject("GeoDigitalLogo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

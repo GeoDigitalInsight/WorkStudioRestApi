@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -188,9 +189,9 @@ namespace WSRestApiApp
         }
 
         //Routine that gives a flow of how to execute a custom UI Action in WorkStudio
-        //In this example, a command named PickListSavePicklistInfo with a TDataObj in/out
+        //In this example, a command named TestUIAction with a TDataObj in/out
         //parameter named Data needs to be setup in WorkStudio
-        //A UIAction named PickListSavePicklistInfo needs to be attached to the command
+        //A UIAction named TestUIAction needs to be attached to the command
         //mentioned above.
         //The following is an example of the script that can be used to the command
         //to access the payload being sent up via the EXECUTEUIACTION: 
@@ -209,8 +210,58 @@ namespace WSRestApiApp
         private void ExecuteUIAction(UriBuilder url, String userName, String passWord)
         {
             url.Path = "DDOProtocol/EXECUTEUIACTION";
-            JObject reqObj = JsonConvert.DeserializeObject<JObject>(Resources.EXECUTEUIACTION);
-            JObject resObj = HttpUtil.Http(url.ToString(), userName, passWord, reqObj, AddLine);
+
+            JObject resObj;
+            JObject reqObj;
+
+            reqObj = new JObject();
+            //The name of the UIAction to execute.  See the ReadMe.md file to see better
+            //definition around how to set this up.
+            reqObj["UIActionName"] = "TestUIAction";
+            JArray actParams = new JArray();
+            //The parameters array.
+            reqObj["Parameters"] = actParams;
+            JObject actParam;
+            actParam = new JObject();
+            actParams.Add(actParam);
+            //Set to TObjectParameter
+            actParam["_ClassName"] = "TObjectParameter";
+            //The name of the object that shows up in the script.  See the ReadMe.md file to see better
+            //definition around how to set this up.
+            actParam["ParamName"] = "Data";
+            //Leave blank
+            actParam["Description"] = "";
+            //Set to false
+            actParam["Required"] = false;
+            //Set to false
+            actParam["UserParam"] = false;
+            actParam["ParameterType"] = "ptInput";
+            //A TDataObj type tells WorkStudio server to use an "object type" instance.  TDataObj is the most flexible
+            //and would be recommended for integrations.
+            actParam["ObjectClass"] = "TDataObj";
+
+            JObject dataPayload = new JObject();
+            //The paramvalue is the payload that is whatever is desired to be sent to the WorkStudio Action script to be manipulated.
+            actParam["ParamValue"] = dataPayload;
+
+            dataPayload["attachguid"] = "{2664EA5B-D36C-4E47-AF4B-DF93C6EB87E9}";
+            dataPayload["filename"] = "TransformerSheet.pdf";
+            dataPayload["bloburi"] = "sftp://server.com/directory/{2664EA5B-D36C-4E47-AF4B-DF93C6EB87E9}";
+
+            //Demonstrate how we could get a binary payload (image, pdf, word document, etc.) to the WorkStudio server to be able to be 
+            //manipulated from a script.  We have included GeoDigitalLog.png as a resource in the project to demonstrate this.  The same
+            //logic could easily be modified to directly use a file on a hard drive.
+            using (MemoryStream mem = new MemoryStream())
+            {
+                Resources.GeoDigitalLogo.Save(mem, ImageFormat.Png);
+                mem.Seek(0, SeekOrigin.Begin);
+                String base64Str = Convert.ToBase64String(mem.ToArray());
+                dataPayload["LogoPngBase64"] = base64Str;
+            }
+
+
+
+            resObj = HttpUtil.Http(url.ToString(), userName, passWord, reqObj, AddLine);
 
             if (String.Equals(WSRestApiUtil.GetJSONValue<String>(resObj, "Protocol"), "OK", StringComparison.CurrentCultureIgnoreCase))
             {
@@ -220,6 +271,7 @@ namespace WSRestApiApp
             else
             {
                 //An error occurred
+                AddLine($"An error occured while attempting to execute the UIAction: {WSRestApiUtil.GetJSONValue<String>(resObj, "errorMessage")}");
             }
         }
 
