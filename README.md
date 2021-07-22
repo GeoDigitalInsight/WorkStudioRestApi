@@ -40,6 +40,8 @@ As you can see in the screen shot below `Default\WSApiUser` has been specified i
 
 ![](images/Credentials.png)
 
+WorkStudio Server uses Basic Authentication [Basic Authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) to check authentication and authorization of the api user.  An invalid user will return a 401 error.  Under the hood, Basic Authentication sets an http header with the username:password base 64 encoded.  The example C# code proveded uses classes provided by .NET Core to set the username and password credentials in the `NetworkCredentials` object and then .NET Core handles the setting of the headers properly when it sends the payload to the WorkStudio Server.  Most programming languages that can send http have the ability to set the Basic Authentication headers in a fashion that will work.
+
 # Examples
 
 Examples of how to execute a http request against WorkStudio Server is provided in `WSRestApiApp\WSRestApiAppMainForm.cs`.  The form has buttons that illustrates how to execute each example.
